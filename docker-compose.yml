@@ -1,0 +1,77 @@
+version: '3'
+services:
+
+  #PHP
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pars-app
+    restart: unless-stopped
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+
+  #Nginx
+  webserver:
+    image: nginx:alpine
+    container_name: pars-webserver
+    restart: unless-stopped
+    ports:
+      - "8989:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./.docker/nginx/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #MySQL
+  db:
+    image: mysql:8
+    container_name: pars-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: pendar
+      MYSQL_PASSWORD: password
+    volumes:
+      - dbdata4:/var/lib/mysql/
+    networks:
+      - app-network
+
+  #PhpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pars-phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+    networks:
+      - app-network
+
+  #Redis
+  redis:
+    image: redis:alpine
+    container_name: pars-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+#Networks
+networks:
+  app-network:
+    driver: local
+#Volumes
+volumes:
+  dbdata4:
