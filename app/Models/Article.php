@@ -11,7 +11,11 @@ class Article extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'image_path'];
+    protected $fillable = [
+        'title',
+        'content',
+        'image_path'
+    ];
 
     public function scopeFilter($query, $filters)
     {
@@ -36,5 +40,11 @@ class Article extends Model
         }
 
         return $query;
+    }
+
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }

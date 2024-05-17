@@ -51,7 +51,7 @@ class ArticleController extends ResponseController
     public function store(StoreArticleRequest $request)
     {
         $parmas = $request->validated();
-        // $parmas['image_path'] = Storage::disk('s3')->put('articles', $request->file('image'));
+        $parmas['image_path'] = Storage::disk('s3')->put('articles', $request->file('image'));
 
         $article = $this->articleRepository->store($parmas);
 
