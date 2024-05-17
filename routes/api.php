@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\ArticleController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\LikeController;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\LikeController;
 use Illuminate\Support\Facades\Route;
 
 Route::apiResource('articles', ArticleController::class);
